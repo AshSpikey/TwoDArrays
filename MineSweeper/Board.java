@@ -3,10 +3,12 @@ package MineSweeper;
 public class Board {
     /*
      * Values 2D array will have a number of different values
-     * 1,2,3,4 etc (user sees a #)
-     * -, which is a 0, user sees a # 
+     * #, unrevealed tile
+     * 1,2,3,4,5,6,7,8 revealed tile
+     * -, revealed tile, means that there are 0 mines around
      * M, which is a mine, user sees a # 
-     * 
+     * ⚑, mine that the user flagged
+     * X, non-mine that the user flagged, user sees a ⚑
      */
 
 
