@@ -1,6 +1,12 @@
 package MineSweeper;
  
 public class Board {
+//Welcome.....to jurrassic park
+//This is the class that I, Frank, had control over and built
+//I did Board, asher dealth with Main
+//every goofy thing in here is my doing, every goofy thing in main is asher's doing
+
+
     /*
      * Values 2D array will have a number of different values
      * #, unrevealed tile
@@ -9,25 +15,25 @@ public class Board {
      * M, which is a mine, user sees a # 
      * ⚑, mine that the user flagged
      * X, non-mine that the user flagged, user sees a ⚑
-     */
+     */ 
 
 
 
 
 
 
-    private String[][] values;
-    private int width;
-    private int height;
-    private int mines;
-    private boolean gameLost = false;
+    private String[][] values; //holds the board itself basically
+    private int width; // this is actually the height don't question it
+    private int height; //this is actually the width don't question it
+    private int mines; //the amount of mines that will be present in the board
+    private boolean gameLost = false; //something that changes to true if you click a mine
     
-    public Board(int width, int height, int mines) {
-        this.width = width;
-        this.height = height;
-        this.mines = mines;
+    public Board(int width, int height, int mines) { //epic constructor time
+        this.width = width; //wow
+        this.height = height; //crazy
+        this.mines = mines; //cool
 
-        values = new String[width][height];
+        values = new String[width][height]; //makes an empty board
     }
 
     public void fillBoard(){
@@ -58,6 +64,10 @@ public class Board {
 
 
     public String toString(){
+        //ok look
+        //so, this method breaks when the board is bigger than 10x10
+        //
+
         /*
          * what it should look like:
          * 
@@ -74,6 +84,8 @@ public class Board {
 8| # # # # M M # # # # 
 9| # # # # # # # # # # 
          */
+        //NOTE: the charachters won't look like that anymore, those are hidden from the player, but the concept still holds
+
         //add the first few spaces to offset the numbers on top
         String str = "   ";
         
@@ -85,7 +97,7 @@ public class Board {
         //down a line, add in spacing for the underlines
         str += "\n  _";
 
-        //add in 2 underlines for every number there will be
+        //add in underlines for every number there will be
         for (int y = 0; y < height; y++) {
             str += "__";
         }

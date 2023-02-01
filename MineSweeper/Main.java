@@ -2,6 +2,8 @@ package MineSweeper;
 
 import java.util.Scanner;
 
+import javax.xml.transform.Source;
+ 
 public class Main{
     public static void main(String[] args) throws InterruptedException{
         // the printStr is used as the str that is printed slowly 
@@ -19,16 +21,32 @@ public class Main{
         String name = sc.nextLine();
         printStr = ("Hello, " + name + "\nYou are a very important person, you need to clear a mindfield so our troops can safely make it out of a warzone! Get to work!");
         slowText(printStr);
-
+        printStr = ("A quick note! If you decide to make a board bigger than 10x10, the numbers will not line up... so like dont? Or if you want to, be prepared for some weirdness with the display!");
+        slowText(printStr);
 
         // Creating board object with custom sizes
         printStr = ("You now have the option to customize the board!");
         slowText(printStr);
         
+
+        // getting custom rows 
         while(true){
-        printStr = ("\tHow many rows would you like?");
-        slowText(printStr);
-        boardRows = sc.nextInt();
+            boolean loopVar = true;
+            while(loopVar){
+                loopVar = false;
+                printStr = ("\n\tHow many rows would you like?\n\t");
+                slowText(printStr);
+
+                String boardRowsString = sc.nextLine();
+                try{
+                    boardRows = Integer.parseInt(boardRowsString);
+                }catch (Exception e){
+                    printStr = ("\tYou did not enter a valid integer.");
+                    slowText(printStr);
+                    loopVar = true;
+                }
+
+            }
         if(boardRows <= 0){
             printStr = ("That answer is less than or equal to 0. Stop it.");
             slowText(printStr);
@@ -37,8 +55,10 @@ public class Main{
         }
         }
         
+
+        // getting custom columns 
         while(true){
-        printStr = ("\tHow many columns would you like to have?");
+        printStr = ("\tHow many columns would you like to have?\n");
         slowText(printStr);
         boardColumns = sc.nextInt();
         if(boardColumns <= 0){
@@ -49,12 +69,15 @@ public class Main{
         }
         }
         
+
+
+        // getting custom mines 
         while(true){
-        printStr = ("\tHow many mines would you like?");
+        printStr = ("\tHow many mines would you like?\n");
         slowText(printStr);
         boardMines = sc.nextInt();
 
-        if(boardMines > (boardColumns * boardRows)){
+        if(boardMines > (boardColumns * boardRows)){ 
             printStr = ("You have more mines that spaces. That is not possible. Stop it.");
             slowText(printStr);
         }else{
@@ -99,6 +122,11 @@ public class Main{
                 printStr = ("You did not enter a valid answer.\n");
                 slowText(printStr);
             }
+        }
+
+        if(gameBoard.getGameLost()){
+            printStr = ("You hit a bomb and lost! Try again!");
+            slowText(printStr);
         }
     } 
 
