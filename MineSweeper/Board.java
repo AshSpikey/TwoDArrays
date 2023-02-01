@@ -66,7 +66,8 @@ public class Board {
     public String toString(){
         //ok look
         //so, this method breaks when the board is bigger than 10x10
-        //
+        //i tried to fix it, but my first try broke everything and there was no time to troubleshoot
+        //so now we just put a disclaimer to not make it bigger than 10x10
 
         /*
          * what it should look like:
