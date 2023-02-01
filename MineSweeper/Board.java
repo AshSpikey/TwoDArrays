@@ -214,4 +214,8 @@ public class Board {
         //therefore, all tiles have been revealed and victory has been achieved
         return true; //W
     }
+
+    public String[][] getFilledBoard(){
+        return values;
+    }
 }

@@ -1,8 +1,6 @@
 package MineSweeper;
 
 import java.util.Scanner;
-
-import javax.xml.transform.Source;
  
 public class Main{
     public static void main(String[] args) throws InterruptedException{
@@ -48,7 +46,7 @@ public class Main{
 
             }
         if(boardRows <= 0){
-            printStr = ("That answer is less than or equal to 0. Stop it.");
+            printStr = ("\tThat answer is less than or equal to 0. Stop it.");
             slowText(printStr);
         }else{
             break;
@@ -58,11 +56,22 @@ public class Main{
 
         // getting custom columns 
         while(true){
-        printStr = ("\tHow many columns would you like to have?\n");
-        slowText(printStr);
-        boardColumns = sc.nextInt();
+        boolean loopVar = true;
+        while(loopVar){
+            loopVar = false;
+            printStr = ("\n\tHow many columns would you like to have?\n\t");
+            slowText(printStr);
+
+            String boardColumnString = sc.nextLine();
+            try{
+                boardColumns = Integer.parseInt(boardColumnString);
+            } catch (Exception e){
+                printStr = ("\tYou did not enter a valid integer.\n");
+                slowText(printStr);
+            }
+        }
         if(boardColumns <= 0){
-            printStr = ("That answer is less than or equal to 0. Stop it.");
+            printStr = ("\tThat answer is less than or equal to 0. Stop it.");
             slowText(printStr);
         }else{
             break;
@@ -73,51 +82,82 @@ public class Main{
 
         // getting custom mines 
         while(true){
-        printStr = ("\tHow many mines would you like?\n");
-        slowText(printStr);
-        boardMines = sc.nextInt();
+            boolean loopVar = true;
+            while(loopVar){
+                loopVar = false;
+                printStr = ("\tHow many mines would you like?\n\t");
+                slowText(printStr);
+                String boardMinesString = sc.nextLine();
 
-        if(boardMines > (boardColumns * boardRows)){ 
-            printStr = ("You have more mines that spaces. That is not possible. Stop it.");
-            slowText(printStr);
-        }else{
-            break;
-        }
+                try{
+                    boardMines = Integer.parseInt(boardMinesString);
+                }catch (Exception e){
+                    printStr = ("\tYou did not enter a valid integer.\n");
+                    slowText(printStr);
+                }
+            }
+            if(boardMines > (boardColumns * boardRows)){ 
+                printStr = ("\tYou have more mines that spaces. That is not possible. Stop it.");
+                slowText(printStr);
+            }else if(boardMines <= 0){
+                printStr = ("\tYou must have at least 1 mine. Why did you not. Stop it.");
+                slowText(printStr);
+            }else{
+                break;
+            }
         }
         Board gameBoard = new Board(boardRows, boardColumns, boardMines);
 
         // Filling said board with mines 
+        ClearTerminal();
         gameBoard.fillBoard();
         System.out.println(gameBoard);
 
         
         
         // Game loop. Ends when the boolean value is true, thus when the player loses
-        while(!gameBoard.getGameLost()){
+        while(!gameBoard.getGameLost() && !gameBoard.checkIfWin()){
+            boolean loopVar = true;
             printStr = ("Would you like to place a flag or explore an area? (flag/explore)\n");
             slowText(printStr);
             String decision = sc.nextLine().toLowerCase();
 
             if(decision.equals("flag")){
-                printStr = ("If you would like to remove a flag, place a flag in the same space in which the flag already is.\nWhich area would you like to place a flag? Please write your answer as: row, column.\nSeperate your answer with a comma. Make sure to not add a space after the comma!\n");
-                slowText(printStr);
-                String answer = sc.nextLine();
-                int indexOfComma = answer.indexOf(",");
-                int row = Integer.parseInt(answer.substring(0,indexOfComma));
-                int column = Integer.parseInt(answer.substring(indexOfComma + 1));
-                gameBoard.placeFlag(row, column);
-                ClearTerminal();
-                System.out.println(gameBoard);
+                while(loopVar){
+                    printStr = ("If you would like to remove a flag, place a flag in the same space in which the flag already is.\nWhich area would you like to place a flag? Please write your answer as: row, column.\nSeperate your answer with a comma. Make sure to not add a space after the comma!\n");
+                    slowText(printStr);
+                    String answer = sc.nextLine();
+                    try{
+                        loopVar = false;
+                        int indexOfComma = answer.indexOf(",");
+                        int row = Integer.parseInt(answer.substring(0,indexOfComma));
+                        int column = Integer.parseInt(answer.substring(indexOfComma + 1));
+                        gameBoard.placeFlag(row, column);
+                        ClearTerminal();
+                        System.out.println(gameBoard);
+                    } catch (Exception e){
+                        printStr = ("You did not enter a valid answer. Please try again.");
+                        slowText(printStr);
+                    }
+                }
             }else if(decision.equals("explore")){
-                printStr = ("Which area would you like to explore? Please write your answer as: row, column.\nSeperate your answer with a comma. Make sure to not add a space after the comma!\n");
-                slowText(printStr);
-                String answer = sc.nextLine();
-                int indexOfComma = answer.indexOf(",");
-                int row = Integer.parseInt(answer.substring(0,indexOfComma));
-                int column = Integer.parseInt(answer.substring(indexOfComma + 1));
-                gameBoard.clearSpace(row, column);
-                ClearTerminal();
-                System.out.println(gameBoard);
+                while(loopVar){  
+                    printStr = ("Which area would you like to explore? Please write your answer as: row, column.\nSeperate your answer with a comma. Make sure to not add a space after the comma!\n");
+                    slowText(printStr);
+                    String answer = sc.nextLine();
+                    try{
+                        loopVar = false;
+                        int indexOfComma = answer.indexOf(",");
+                        int row = Integer.parseInt(answer.substring(0,indexOfComma));
+                        int column = Integer.parseInt(answer.substring(indexOfComma + 1));
+                        gameBoard.clearSpace(row, column);
+                        ClearTerminal();
+                        System.out.println(gameBoard);
+                    } catch (Exception e){
+                        printStr = ("You did not enter a valid answer. Please try again.");
+                        slowText(printStr);
+                    }
+                }
             }else{
                 printStr = ("You did not enter a valid answer.\n");
                 slowText(printStr);
@@ -125,11 +165,59 @@ public class Main{
         }
 
         if(gameBoard.getGameLost()){
-            printStr = ("You hit a bomb and lost! Try again!");
+            ClearTerminal();
+            String[][] filledBoard = gameBoard.getFilledBoard();
+            String str = "   ";
+            String underscoreString = "  _";
+            for(int i = 0; i < boardColumns; i ++){
+                str += Integer.toString(i);
+                str += " ";
+                underscoreString += "__";
+            }
+            System.out.println(str);
+            System.out.println(underscoreString);
+
+            int number = 0;
+            for(String[] strArr: filledBoard){
+                System.out.print(number + "| ");
+                for(String i: strArr){
+                    System.out.print(i + " ");
+                }
+                number ++;
+                System.out.println();
+            }
+            printStr = ("\nYou hit a bomb and lost! Try again!");
+            slowText(printStr);
+        }
+
+        if(gameBoard.checkIfWin()){
+            ClearTerminal();
+            String[][] filledBoard = gameBoard.getFilledBoard();
+            String str = "   ";
+            String underscoreString = "  _";
+            for(int i = 0; i < boardColumns; i ++){
+                str += Integer.toString(i);
+                str += " ";
+                underscoreString += "__";
+            }
+            System.out.println(str);
+            System.out.println(underscoreString);
+
+            int number = 0;
+            for(String[] strArr: filledBoard){
+                System.out.print(number + "| ");
+                for(String i: strArr){
+                    System.out.print(i + " ");
+                }
+                number ++;
+                System.out.println();
+            }
+            
+            
+            printStr = ("Congrats you win! Play again soon!");
             slowText(printStr);
         }
     } 
-
 
     // Extra static methods 
     public static void slowText(String string) throws InterruptedException{
@@ -137,7 +225,7 @@ public class Main{
         System.out.println();
         for(int i = 0; i < string.length(); i ++){
             System.out.print(string.substring(i, i + 1));
-            Thread.sleep(4);
+            Thread.sleep(40);
         }
     }
 
